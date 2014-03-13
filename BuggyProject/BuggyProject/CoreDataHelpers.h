@@ -17,4 +17,6 @@
 + (void)fillSortedData;
 + (void)cleanData;
 
++ (NSArray *)sortModels:(NSArray *)models;
+
 @end
