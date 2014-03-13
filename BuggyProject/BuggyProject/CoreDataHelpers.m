@@ -58,6 +58,12 @@
 + (void)fillUnsortedData {
 	NSManagedObjectContext *context = [CoreDataHelpers currentContext];
 	
+	//Fetch our current data.  If any is present, return.
+	NSInteger count = [self arrayForFetchRequestWithName:@"AllOwners"].count;
+	if ( count > 0 ) {
+		return;
+	}
+	
 	OwnerEntity *ownerB = [NSEntityDescription insertNewObjectForEntityForName:@"OwnerEntity" inManagedObjectContext:context];
 	ownerB.ownerName = @"Owner B";
 	
@@ -135,6 +141,18 @@
 		[context deleteObject:object];
 	}
 	[CoreDataHelpers saveCurrentContext];
+}
+
++ (NSArray *)sortModels:(NSArray *)models
+{
+	return [models sortedArrayUsingComparator:^NSComparisonResult(ModelsEntity *obj1, ModelsEntity *obj2) {
+		NSComparisonResult comparisonResult = [obj1.owner.ownerName compare:obj2.owner.ownerName];
+		if ( comparisonResult == NSOrderedSame ) {
+			comparisonResult = [obj1.modelName compare:obj2.modelName];
+		}
+		
+		return comparisonResult;
+	}];
 }
 
 @end

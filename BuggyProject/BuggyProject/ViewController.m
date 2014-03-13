@@ -36,11 +36,11 @@
 }
 
 - (IBAction)firstBug:(id)sender {
-	[SomeClass printTextInMain:@"Bug 1"];
+	[SomeClass performSelectorInBackground:@selector(printTextInMain:) withObject:@"Bug 1"]; //Return from this method before performing
 }
 
 - (IBAction)secondBug:(id)sender {
-	NSInteger x = 123;
+	__block NSInteger x = 123; //Trap the variable x in the block, not the value 123
 	void (^printX)() = ^() {
 		NSLog(@"%i", x);
 	};
@@ -70,6 +70,7 @@
 - (IBAction)fifthBug:(id)sender {
 	[CoreDataHelpers fillUnsortedData];
 	NSArray *models = [CoreDataHelpers arrayForFetchRequestWithName:@"AllModels"];
+	models = [CoreDataHelpers sortModels:models]; //Sort the models
 	NSLog(@"%@", models);
 }
 
